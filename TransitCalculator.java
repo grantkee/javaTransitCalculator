@@ -6,14 +6,17 @@ public class TransitCalculator {
   //fields
   int numOfDays;
   int numOfRides;
+  int age;
   String[] rideType = {"pay-per-ride", "7-day Unlimited", "30-day Unlimited"};
-  double[] rideCost = {2.75, 33.00, 127.00};
+  double[] rideCost =  {2.75, 33.00, 127.00};
+  double[] discountCost = {1.35, 16.50, 63.50};
   ArrayList<Double> totalCosts = new ArrayList<Double>();
 
   //class constructor
-  public TransitCalculator(int days, int rides){
+  public TransitCalculator(int days, int rides, int ageOfRider){
     numOfDays = days;
     numOfRides = rides;
+    age = ageOfRider;
   }
 
   public double singleRidePrice(){
@@ -75,16 +78,18 @@ public class TransitCalculator {
 
   //main method
   public static void main(String[] args){
-    int days, rides;
+    int days, rides, age;
     System.out.println("Hello, welcome to optimal fare calculator.");
     try (Scanner in = new Scanner(System.in)){
       System.out.println("How many days will you be using the public transit?");
       days = in.nextInt();
       System.out.println("How many rides will you take?");
       rides = in.nextInt();
+      System.out.println("How old are you?");
+      age = in.nextInt();
     }
 
-    TransitCalculator test = new TransitCalculator(days, rides);
+    TransitCalculator test = new TransitCalculator(days, rides, age);
     String result = test.getBestFare();
     System.out.println(result);
   }
