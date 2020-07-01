@@ -1,5 +1,6 @@
-import java.util.Arrays;
+import java.util.Scanner;
 import java.lang.Math;
+import java.util.ArrayList;
 
 public class TransitCalculator {
   //fields
@@ -7,6 +8,7 @@ public class TransitCalculator {
   int numOfRides;
   String[] rideType = {"pay-per-ride", "7-day Unlimited", "30-day Unlimited"};
   double[] rideCost = {2.75, 33.00, 127.00};
+  ArrayList<Double> totalCosts = new ArrayList<Double>();
 
   //class constructor
   public TransitCalculator(int days, int rides){
@@ -15,9 +17,10 @@ public class TransitCalculator {
   }
 
   public double singleRidePrice(){
-    double totalCost = numOfDays*numOfRides;
+    double totalCost = rideCost[0]*numOfRides;
+    totalCosts.add(totalCost);
     System.out.println("total cost for pay-per-ride: $" + totalCost);
-    return numOfRides * rideCost[0];
+    return totalCost / numOfRides;
   }
 
   //cost per ride using 7-day pass
@@ -25,6 +28,7 @@ public class TransitCalculator {
     int numberOfPasses = numOfDays / 7 + (numOfDays % 7 == 0 ? 0 : 1);
     System.out.println("number of 7-day passes: " + numberOfPasses);
     double totalCost = rideCost[1] * numberOfPasses;
+    totalCosts.add(totalCost);
     System.out.println("total cost for 7-day option: " + totalCost);
     return totalCost / numOfRides;
   }
@@ -33,6 +37,7 @@ public class TransitCalculator {
     int numberOfPasses = numOfDays / 30 + (numOfDays % 30 == 0 ? 0 : 1);
     System.out.println("number of 30-day passes: " + numberOfPasses);
     double totalCost = numberOfPasses * rideCost[2];
+    totalCosts.add(totalCost);
     System.out.println("total cost for 30-day option: " + totalCost);
     return totalCost / numOfRides;
   }
@@ -51,19 +56,35 @@ public class TransitCalculator {
     double[] prices = getRidePrices();
     double lowest = prices[0];
     int index = 0;
+    
+    //find lowest price
     for(int i = 0; i < prices.length; i++){
       if(prices[i] < lowest){
         lowest = prices[i];
         index = i;
       }
     }
+
+    //convert lowest to two decimal places
     double lowestPrice = Math.round(lowest*100.0)/100.0;
-    return "You should get the "+rideType[index]+" option at $"+rideCost[index]+", which comes out to only $"+lowestPrice+" per ride.";
+
+    //return options
+
+    return "You should get the "+rideType[index]+" option at $"+lowestPrice+" per ride, which comes out to a total of $"+totalCosts.get(index)+".";
   }
 
   //main method
   public static void main(String[] args){
-    TransitCalculator test = new TransitCalculator(26, 54);
+    int days, rides;
+    System.out.println("Hello, welcome to optimal fare calculator.");
+    try (Scanner in = new Scanner(System.in)){
+      System.out.println("How many days will you be using the public transit?");
+      days = in.nextInt();
+      System.out.println("How many rides will you take?");
+      rides = in.nextInt();
+    }
+
+    TransitCalculator test = new TransitCalculator(days, rides);
     String result = test.getBestFare();
     System.out.println(result);
   }
